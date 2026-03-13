@@ -1,0 +1,46 @@
+---
+title: "HW 6"
+author: "May Alsoufi (PID: A17423250)"
+format: pdf
+tcont: TRUE
+---
+
+> Q6. How would you generalize the original code above to work with any set of input
+protein structures?
+
+First, we must install the package using function: `install.packages("bio3d")`
+
+Read PDB structure, Trim to selected chain and C-alpha atoms, Extract B-factors, then Plot B-factors
+```{r}
+library(bio3d)
+analyze_drug_binding <- function(pdb_id, chain = "A") {
+  pdb <- read.pdb(pdb_id)
+  pdb_chain <- trim.pdb(pdb, chain = chain, elety = "CA")
+  b_factors <- pdb_chain$atom$b
+  plotb3(
+    b_factors,
+    sse  = pdb_chain,
+    typ  = "l",
+    ylab = "B-factor",
+    xlab = "Residue Position",
+    main = paste("B-factor Profile:", pdb_id)
+  )
+  invisible(b_factors)
+}
+```
+
+Kinase with drug
+```{r}
+analyze_drug_binding("4AKE") 
+```
+
+Kinase without drug
+```{r}
+analyze_drug_binding("1AKE")
+```
+
+Kinase with drug
+```{r}
+analyze_drug_binding("1E4Y") 
+```
+

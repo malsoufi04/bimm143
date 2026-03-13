@@ -1,0 +1,75 @@
+---
+title: "Class12"
+author: "May Alsoufi (PID: A17423250)"
+format: pdf
+---
+
+## Section 1: Identify genetic variants of interest
+There are a number of gene variants associated with childhood asthma. A study from Verlaan
+et al. (2009) shows that 4 candidate SNPs demonstrate significant evidence for association.
+You want to find out what they are by visiting OMIM (http://www.omim.org) and locating the
+Verlaan et al. paper description.
+
+> Q1: What are those 4 candidate SNPs?
+
+rs12936231, rs8067378, rs9303277, and rs7216389
+
+> Q2: What three genes do these variants overlap or effect?
+
+The candidate SNPs fall within the chromosome 17q21 locus and affect or regulate the genes ZPBP2, GSDMB, and ORMDL3.
+
+> Q3. What is the location of rs8067378 and what are the different alleles for rs8067378?
+
+rs8067378 is located on chromosome 17 at position 39,895,095 on the forward strand. The variant is multi-allelic with possible alleles A, C, and G.
+
+> Q4. Name at least 3 downstream genes for rs8067378?
+
+Downstream genes of rs8067378 include IKZF3, RARA, and ERBB2.
+
+> Q5.  What proportion of the Mexican Ancestry in Los Angeles sample population (MXL) are
+homozygous for the asthma associated SNP (G|G)? 
+
+In the MXL population, 9 out of 64 individuals are homozygous G|G, corresponding to a proportion of approximately 0.14 (14%).
+
+> Q6. Back on the ENSEMBLE page, use the “search for a sample” field above to find the
+particular sample HG00109. This is a male from the GBR population group. What is the
+genotype for this sample?
+
+The genotype for sample HG00109 at rs8067378 is G|G.
+
+## Section 2: Initial RNA-Seq analysis
+Now, you want to understand whether the SNP will affect gene expression. You can find the
+raw RNA-Seq data of this one sample on the class webpage:
+https://bioboot.github.io/bggn213_W19/class-material/HG00109_1.fastq
+https://bioboot.github.io/bggn213_W19/class-material/HG00109_2.fastq
+
+> Q7: How many sequences are there in the first file? What is the file size and format of the data? Make sure the format is fastqsanger here!
+
+The first FASTQ file contains 3,863 sequences. The file size is 1.52 MB and the format is fastqsanger.
+
+
+> Q8. What is the GC content and sequence length of the second fastq file?
+
+The sequence length of the second FASTQ file ranges from 50–75 base pairs, and the GC content is 54%.
+
+> Q9. How about per base sequence quality? Does any base have a mean quality score below
+20?
+
+The per base sequence quality remains well above a mean score of 20 across all base positions. Therefore, trimming is not necessary for this dataset.
+
+
+## Section 3: Mapping RNA-Seq reads to genome
+The next step is mapping the processed reads to the genome. The major challenge when
+mapping RNA-Seq reads is that the reads, because they come from RNA, often cross splice
+junction boundaries; splice junctions are not present in a genome's sequence, and hence
+typical NGS mappers such as Bowtie (http://bowtie-bio.sourceforge.net/index.shtml ) and
+BWA (http://bio-bwa.sourceforge.net/ ) are not ideal without modifying the genome sequence.
+Instead, it is better to use a mapper such as Tophat (http://ccb.jhu.edu/software/tophat) that is designed to map RNA-seq reads.
+
+> Q10. Where are most the accepted hits located?
+
+ORMDL3 shows strong coverage, and GSDMB also shows some RNA-seq coverage, indicating both genes are expressed.
+
+> Q11. Following Q10, is there any interesting gene around that area?
+
+The SNP rs8067378 is located in the chr17q21 region near ORMDL3. RNA-seq data shows strong expression of ORMDL3 in this region, suggesting that genetic variation at this locus may influence ORMDL3 expression. Because ORMDL3 has been associated with asthma risk, this SNP may contribute to asthma susceptibility through effects on gene regulation.

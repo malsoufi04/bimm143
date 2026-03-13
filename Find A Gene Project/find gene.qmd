@@ -1,0 +1,68 @@
+---
+title: "Find A Gene Project PT 2"
+author: "May Alsoufi (PID: A17423250)"
+format: html
+---
+
+```{r}
+library(bio3d)
+```
+
+```{r}
+aln <- read.fasta("rbp4_sequences.fasta.txt")
+```
+
+```{r}
+id <- seqidentity(aln)
+```
+
+```{r}
+heatmap(id,
+        col=colorRampPalette(c("white","orange","red"))(100),
+        margins=c(15,15))
+```
+
+```{r}
+hits <- blast.pdb(aln$ali["Human_RBP4",])
+```
+
+```{r}
+hits
+```
+
+```{r}
+head(hits)
+```
+
+```{r}
+names(hits)
+```
+
+```{r}
+```
+
+
+```{r}
+hits$hit.tbl
+```
+
+```{r}
+ids <- substr(hits$hit.tbl$subjectids[1:3], 1, 4)
+ids
+```
+
+```{r}
+anno <- pdb.annotate(ids)
+anno
+```
+```{r}
+anno$experimentalTechnique
+anno$resolution
+anno$source
+```
+
+```{r}
+hits$hit.tbl$identity[1:3]
+hits$hit.tbl$evalue[1:3]
+```
+

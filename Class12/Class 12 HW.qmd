@@ -1,0 +1,63 @@
+---
+title: "Class 12 HW"
+author: "May Alsoufi (PID: A17423250)"
+format: pdf
+---
+
+## Section 4: Population Scale Analysis [HOMEWORK]
+
+One sample is obviously not enough to know what is happening in a population. You are
+interested in assessing genetic differences on a population scale. So, you processed about
+~230 samples and did the normalization on a genome level. Now, you want to find whether
+there is any association of the 4 asthma-associated SNPs (rs8067378…) on ORMDL3
+expression.
+
+> Q13: Read this file into R and determine the sample size for each genotype and their
+corresponding median expression levels for each of these genotypes. 
+
+```{r}
+dat <- read.table("rs8067378_ENSG00000172057.6.txt",
+                  header = TRUE)
+
+head(dat)
+```
+
+```{r}
+str(dat)
+```
+
+```{r}
+table(dat$geno)
+```
+```{r}
+tapply(dat$exp, dat$geno, median)
+```
+Can also be shown like this:
+
+```{r}
+aggregate(exp ~ geno, dat, median)
+
+```
+
+The dataset contained 108 individuals with genotype A/A, 233 with A/G, and 121 with G/G.
+The median expression levels were 31.2 for A/A, 25.1 for A/G, and 20.1 for G/G.
+Expression decreases progressively with increasing copies of the G allele.
+
+> Q14: Generate a boxplot with a box per genotype, what could you infer from the relative
+expression value between A/A and G/G displayed in this plot? Does the SNP effect the
+expression of ORMDL3?
+
+```{r}
+boxplot(exp ~ geno,
+        data = dat,
+        col = c("pink", "lightblue", "lavender"),
+        main = "ORMDL3 Expression by rs8067378 Genotype",
+        xlab = "Genotype",
+        ylab = "Expression Level")
+```
+
+The boxplot shows  differences in ORMDL3 expression across genotypes. Individuals with the A/A genotype exhibit the highest median expression, followed by A/G, while G/G individuals show the lowest expression levels.
+
+This pattern suggests an effect of the G allele where increasing copies of the G allele correspond to progressively lower ORMDL3 expression.
+
+rs8067378 appears to influence ORMDL3 gene expression, indicating that this SNP likely functions as a regulatory variant.

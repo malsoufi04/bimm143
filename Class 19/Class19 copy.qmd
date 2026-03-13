@@ -1,0 +1,49 @@
+---
+title: "Class19"
+author: "May Alsoufi (PID: A17423250)"
+format: html
+---
+> Q1. What protein do these sequences correspond to? (Give both full gene/protein name and official symbol).
+
+I ran a BLASTp search against RefSeq_Protein and filtered to Homo Sapiens only. RID: V38BY50F014 
+
+Protein Name: Epidermal Growth Factor Receptor (EGFR),
+Symbol: MET
+
+> Q2. What are the tumor specific mutations in this particular case ( e.g. A130V)?
+
+```{r}
+library(bio3d)
+
+# Read my sequence
+a <- read.fasta("/Users/mayalsoufi/Desktop/BIMM 143/Class 19/A17423250_mutant_seq.fa")
+```
+
+We can score conservation per sequence position
+```{r}
+conserv(a)
+```
+
+
+```{r}
+healthy <- a$ali[1,]
+tumor <- a$ali[2,]
+
+mut_pos <- which(healthy != tumor)
+
+mutations <- paste0(healthy[mut_pos], mut_pos, tumor[mut_pos])
+
+mutations
+```
+
+> Q3. Do your mutations cluster to any particular domain and if so give the name and PFAM id of this domain? Alternately note whether your protein is single domain and provide it’s PFAM id/accession and name (e.g. PF00613 and PI3Ka).
+
+UniProt was used and PFam domain analysis of the hepatocyte growth factor receptor (MET) shows several domains, including the *protein tyrosine kinase domain (Accession: PF07714)* spanning amino acid residues 1078–1336. 
+
+The tumor-specific mutations identified in this sequence are D1164V, F1184E, P1246R, and L1297Y, which occur at positions 1164, 1184, 1246, and 1297, respectively. Each of these mutation positions falls within the range of the protein tyrosine kinase domain (1078–1336). Because all observed mutations occur within this domain, the mutations are clustered in the protein tyrosine kinase domain (PF07714). This domain is responsible for the catalytic activity of the MET receptor, so mutations occurring within this region can potentially alter kinase activity and contribute to oncogenic signaling.
+
+> Q4. Using the NCI-GDC list the observed top 2 missense mutations in this protein (amino acid substitutions)?
+
+Using 
+
+![MET mutation distribution](/Users/mayalsoufi/Desktop/BIMM 143/Class 19/met_lollipop.png)

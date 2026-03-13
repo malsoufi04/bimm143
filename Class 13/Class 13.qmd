@@ -1,0 +1,226 @@
+---
+title: "Class 13"
+author: "May Alsoufi (PID: A17423250)"
+format: pdf
+toc: TRUE
+---
+
+## Background
+The data for this hands-on session comes from a published RNA-seq experiment where airway smooth muscle cells were treated with dexamethasone, a synthetic glucocorticoid steroid with anti-inflammatory effects
+
+## Bioconductor setup
+As we already noted in a previous class Bioconductor is a large repository and resource for R packages that focus on analysis of high-throughput genomic data.
+
+Recall that Bioconductor packages are installed differently than “regular” R packages from CRAN. To install the core Bioconductor packages, copy and paste the following two lines of code into your R console one at a time.
+
+Check that you have installed everything correctly by entering the following two commands at the console window:
+
+```{r}
+library(BiocManager)
+library(DESeq2)
+```
+
+## DESeq2 Required Inputs
+As input, the DESeq2 package expects  
+- a data.frame of count data (as obtained from RNA-seq or another high-throughput sequencing experiment) and 
+- a second data.frame with information about the samples - often called sample metadata 
+
+The count matrix (called the `countData` in DESeq2-speak) the value in the i-th row and the j-th column of the data.frame tells us how many reads can be assigned to gene i in sample j. 
+
+For the sample metadata (i.e. `colData` in DESeq2-speak) samples are in rows and metadata about those samples are in columns.
+
+## Import countData and colData
+
+```{r}
+counts <- read.csv("airway_scaledcounts.csv", row.names=1)
+head(counts)
+```
+
+> Q1. How many genes are in this dataset?
+
+```{r}
+nrow(counts)
+```
+There are 38694 genes in this dataset.
+
+> Q2. How many control cell lines do we have?
+
+```{r}
+metadata <- read.csv("airway_metadata.csv")
+colnames(metadata)
+```
+
+```{r}
+table(metadata$dex)
+```
+
+There are 4 control samples.
+
+## Toy differential gene expression
+
+```{r}
+library(dplyr)
+control <- metadata %>% filter(dex=="control")
+control.counts <- counts %>% select(control$id) 
+control.mean <- rowSums(control.counts)/4
+head(control.mean)
+```
+
+Instead of comparing 4 separate control columns, we summarize them into one number per gene. What this does:
+- Finds sample names that are control.
+- Extracts those columns from the counts table.
+- Calculates the average expression for each gene in control samples.
+
+> Q3. How would you make the above code in either approach more robust? Is there a function that could help here? 
+
+Instead of using `control.mean <- rowSums(control.counts)/4`, use:
+
+```{r}
+control.mean <- rowMeans(control.counts)
+```
+
+It is better because it:
+- Automatically adjusts if number of control samples changes
+- Prevents hardcoding errors
+- Cleaner and safer
+
+**Now**, we compare Treated vs Control... first we must calculate treated mean
+
+> Q4. Follow the same procedure for the treated samples (i.e. calculate the mean per gene across drug treated samples and assign to a labeled vector called treated.mean)
+
+```{r}
+treated_ids <- metadata$id[metadata$dex == "treated"]
+treated_counts <- counts[, treated_ids]
+treated_mean <- rowMeans(treated_counts)
+```
+
+This gets the average treated expression for each gene. Next, we can make a scatter plot.
+
+> Q5 (a). Create a scatter plot showing the mean of the treated samples against the mean of the control samples. Your plot should look something like the following.
+
+```{r}
+control_ids <- metadata$id[metadata$dex == "control"]
+control_counts <- counts[, control_ids]
+control_mean <- rowMeans(control_counts)
+plot(control_mean, treated_mean)
+```
+What this shows:
+- Each dot = one gene
+- If dots lie on diagonal = no change
+- If above diagonal = increased in treated
+- If below = decreased
+
+> Q5 (b).You could also use the ggplot2 package to make this figure producing the plot below. What geom_?() function would you use for this plot? 
+
+```{r}
+library(ggplot2)
+
+control_ids <- metadata$id[metadata$dex == "control"]
+control_counts <- counts[, control_ids]
+control_mean <- rowMeans(control_counts)
+
+treated_ids <- metadata$id[metadata$dex == "treated"]
+treated_counts <- counts[, treated_ids]
+treated_mean <- rowMeans(treated_counts)
+
+meancounts <- data.frame(control_mean, treated_mean)
+
+ggplot(meancounts, aes(control_mean, treated_mean)) +
+  geom_point()
+```
+You must use `geom_point()`.
+
+> Q6. Try plotting both axes on a log scale. What is the argument to plot() that allows you to do this?
+
+```{r}
+plot(control_mean, treated_mean, log = "xy")
+```
+
+`log = "xy"`, Gene expression ranges from very small to very large. The log scale spreads the points out.
+
+We can find candidate differentially expressed genes by looking for genes with a large change between control and dex-treated samples. We usually look at the log2 of the fold change, because this has better mathematical properties.
+
+Here we calculate log2foldchange, add it to our `meancounts` data.frame and inspect the results either with the *head()* or the *View()* function for example.
+
+> Q7. What is the purpose of the arr.ind argument in the which() function call above? Why would we then take the first column of the output and need to call the unique() function?
+
+```{r}
+head(which(meancounts[,1:2] == 0, arr.ind = TRUE))
+```
+`arr.ind = TRUE` tells R to return row AND column indices as a matrix. Without it, it will return a single index vector. We should use unique row indices because the same gene could have zero in both control and treated. We only want to remove each gene once.
+
+A common threshold used for calling something differentially expressed is a log2(FoldChange) of greater than 2 or less than -2. Let’s filter the dataset both ways to see how many genes are up or down-regulated.
+
+> Q8. Using the up.ind vector above can you determine how many up regulated genes we have at the greater than 2 fc level? 
+
+```{r}
+meancounts$log2fc <- log2(meancounts$treated_mean /
+                          meancounts$control_mean)
+zero.vals <- which(meancounts[,1:2] == 0, arr.ind=TRUE)
+to.rm <- unique(zero.vals[,1])
+mycounts <- meancounts[-to.rm,]
+sum(mycounts$log2fc > 2)
+```
+
+Genes increased at least 4-fold.
+
+> Q9. Using the down.ind vector above can you determine how many down regulated genes we have at the greater than 2 fc level? 
+
+```{r}
+sum(mycounts$log2fc < -2)
+```
+
+Genes decreased at least 4-fold.
+
+> Q10. Do you trust these results? Why or why not?
+
+No. There is no normalization, no statistical testing, no biological variability modeling, and it is just fold-change cutoff. This is overly simplistic.
+
+## Setting up for DESeq
+
+Just like R packages from CRAN, you only need to install Bioconductor packages once (instructions here), then load them every time you start a new R session.
+
+```{r}
+library(DESeq2)
+citation("DESeq2")
+```
+
+**Importing data**
+Bioconductor software packages often define and use custom class objects for storing data. This helps to ensure that all the needed data for analysis (and the results) are available. DESeq works on a particular type of object called a DESeqDataSet. The DESeqDataSet is a single object that contains input values, intermediate calculations like how things are normalized, and all results of a differential expression analysis.
+
+```{r}
+dds <- DESeqDataSetFromMatrix(
+  countData = counts,
+  colData = metadata,
+  design = ~ dex
+)
+```
+
+It tells DESeq2 to compare treated vs control.
+
+This runs full statistical modeling:
+- Normalization
+- Dispersion estimation
+- Negative binomial modeling
+- Hypothesis testing
+
+Now, we can extract results using `res <- results(dds)`... each gene has log2FoldChange, p-value, and adjusted p-value (padj)
+
+We can also make a Volcano Plot:
+
+```{r}
+dds <- DESeqDataSetFromMatrix(
+  countData = counts,
+  colData = metadata,
+  design = ~ dex
+)
+
+dds <- DESeq(dds)
+
+res <- results(dds)
+
+plot(res$log2FoldChange,
+     -log10(res$padj))
+```
+
+This shows X as size of change and Y as statistical significance. High + far right/left = important genes.

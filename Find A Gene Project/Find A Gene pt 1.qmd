@@ -1,0 +1,11 @@
+---
+title: "Find A Gene Project pt. 1"
+author: May Alsoufi (PID: A17423250)
+format: html
+---
+
+> Q1.Tell me the name of a protein you are interested in. Include the species, accession number and known function. This can be a human protein or a protein from any other species as long as it's function is known. 
+
+- The protein selected for this project is Retinol Binding Protein 4 (RBP4) from Homo sapiens.
+- The accession number for this protein is NP_006735.1.
+- RBP4 is a secreted protein that transports retinol (vitamin A alcohol) from the liver to peripheral tissues and plays a key role in retinoid metabolism and signaling.
