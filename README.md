@@ -11,23 +11,24 @@ UC San Diego
 - [Lab 5](Class05.md)
 - [Lab 6](Lab%206/Class06/class06.html)
 - [Lab 7](Lab07/Class%207.html)
-- [Lab 8](Class08/class08.pdf)
+- [Lab 8 - PDF](Class08/class08.pdf)
 - [Lab 9](Class09/class09.html)
 - [Lab 10](Class10/Class10.html)
 - [Lab 11](Class%2011/class11.html)
-- [Lab 12](Class12/Class12.pdf)
-- [Lab 13](Class%2013/Class-13.pdf)
+- [Lab 12 - PDF](Class12/Class12.pdf)
+- [Lab 13 - PDF](Class%2013/Class-13.pdf)
 - [Lab 14](Class14/Class14.pdf)
 - Lab 15 AWS
-- [Lab 17](Class17/Class17.pdf)
-- [Lab 18](Class%2018/Class-18.pdf)
+- [Lab 17 - PDF](Class17/Class17.pdf)
+- [Lab 18 - PDF](Class%2018/Class-18.pdf)
 - [Lab 19](Class%2019/Class19%20copy.html)
 
 ## Homework
 - [HW 2](Lab%202/WK%202%20HW/May%20Alsoufi%20Wk2%20HW.pdf)
 - [HW 3](Lab%203/May%20Alsoufi%20HW3_PSSM.pdf)
 - [HW 6](Lab07/HW6.pdf)
-- [Class 12 HW](Class12/Class-12-HW.pdf)
+- [HW 8](HW
+- [HW 8](HW%208/HW8_unix_questions.pdf)
 
 ## Projects
 
