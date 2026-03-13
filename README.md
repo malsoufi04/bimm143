@@ -31,5 +31,4 @@ UC San Diego
 - [HW 8](HW%208/HW8_unix_questions.pdf)
 
 ## Projects
-
-- [Find A Gene Project](Find%20A%20Gene%20Project/)
+- [Find a Gene Project](Find%20A%20Gene%20Project/Find%20A%20Gene%20Project%20-%20May%20Alsoufi%20_%20(PID_%20A17423250).pdf)
